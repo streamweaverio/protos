@@ -67,13 +67,13 @@ jobs:
           VERSION=$(echo ${{ github.ref }} | cut -d'/' -f 3)
 
           cd $WORKING_DIRECTORY
-          BRANCH="protos-$(date +'%Y%m%d')-$GIT_SHORT_SHA""
+          BRANCH="protos-$(date +'%Y%m%d')-$GIT_SHORT_SHA"
           git status
           git switch -c $BRANCH
           git add .
-          git commit -m "Streamweaver proto ${VERSION}: Generated Go code from commit: $COMMIT_SHA"
+          git commit -m "Streamweaver proto $VERSION: Generated Go code from commit: $COMMIT_SHA"
           git push origin $BRANCH
-          echo "branch=${BRANCH}" >> $GITHUB_OUTPUT
+          echo "branch=$BRANCH" >> $GITHUB_OUTPUT
 
       - name: Create Pull Request
         id: pull_request
