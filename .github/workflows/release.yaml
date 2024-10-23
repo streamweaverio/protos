@@ -70,7 +70,7 @@ jobs:
           BRANCH="protos-$(date +'%Y%m%d')-$GIT_SHORT_SHA"
           git status
           git switch -c $BRANCH
-          git add .
+          git add -f .
           git commit -m "Streamweaver proto $VERSION: Generated Go code from commit: $COMMIT_SHA"
           git push origin $BRANCH
           echo "branch=$BRANCH" >> $GITHUB_OUTPUT
