@@ -1,0 +1,23 @@
+{
+  "name": "@streamweaverio/protos",
+  "version": "0.1.0",
+  "description": "Protobuf definitions for StreamWeaver",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/streamweaverio/protos.git"
+  },
+  "author": "Patrick Foh <patrickfoh@gmail.com>",
+  "license": "SEE LICENSE IN LICENSE",
+  "bugs": {
+    "url": "https://github.com/streamweaverio/protos/issues"
+  },
+  "homepage": "https://github.com/streamweaverio/protos#readme",
+  "devDependencies": {
+    "grpc_tools_node_protoc_ts": "^5.3.3",
+    "grpc-tools": "^1.12.4"
+  }
+}
