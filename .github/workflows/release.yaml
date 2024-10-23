@@ -44,7 +44,7 @@ jobs:
       - name: Checkout destination repository
         uses: actions/checkout@v4
         with:
-          repository: ${{ env.GO_PACKAGE }}
+          repository: streamweaverio/go-protos
           token: ${{ secrets.WORKFLOW_GITHUB_PAT }}
           path: destination
 
