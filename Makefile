@@ -41,4 +41,4 @@ package_go:
 
 package_node: gen_node_ts
 	@cd $(OUTPUT_NODE) && npm init --scope=@streamweaverio -y
-	@cd $(OUTPUT_NODE) && npm install
+	@cd $(OUTPUT_NODE) && npm install grpc @grpc/grpc-js google-protobuf --save
