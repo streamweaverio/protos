@@ -26,7 +26,9 @@ message CreateStreamRequest {
   StreamRetentionOptions retention_options = 3;
 }
 
-message CreateStreamResponse {}
+message CreateStreamResponse {
+  status status = 1;
+}
 
 message GetStreamRequest {
   string stream_name = 1;
