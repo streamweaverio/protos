@@ -123,14 +123,18 @@ jobs:
           echo "Merging PR..."
           gh pr merge $PR_NUMBER -s --admin --body "Auto-merging PR" --repo $REPO
 
-      - name: Create Release
-        if: steps.pull_request.outputs.pr_number != null
-        env:
-          GITHUB_TOKEN: ${{ secrets.WORKFLOW_GITHUB_PAT }}
-          REPO: ${{ env.GO_PACKAGE }}
-        run: |
-          echo "Creating release..."
-          gh release create -t ${{ github.ref_name }} -n ${{ github.ref_name }} -r $REPO
+      - name: Tag Release
+        id: release
+        uses: ncipollo/release-action@v1
+        with:
+          token: ${{ secrets.WORKFLOW_GITHUB_PAT }}
+          tag: ${{ github.ref }}
+          name: ${{ github.ref }}
+          owner: streamweaverio
+          repo: go-protos
+          generateReleaseNotes: true
+          draft: false
+          prerelease: false
 
   nodejs:
     runs-on: ubuntu-latest
@@ -237,11 +241,15 @@ jobs:
           echo "Merging PR..."
           gh pr merge $PR_NUMBER -s --admin --body "Auto-merging PR" --repo $REPO
 
-      - name: Create Release
-        if: steps.pull_request.outputs.pr_number != null
-        env:
-          GITHUB_TOKEN: ${{ secrets.WORKFLOW_GITHUB_PAT }}
-          REPO: ${{ env.NODEJS_PACKAGE }}
-        run: |
-          echo "Creating release..."
-          gh release create -t ${{ github.ref_name }} -n ${{ github.ref_name }} -r $REPO
+      - name: Tag Release
+        id: release
+        uses: ncipollo/release-action@v1
+        with:
+          token: ${{ secrets.WORKFLOW_GITHUB_PAT }}
+          tag: ${{ github.ref }}
+          name: ${{ github.ref }}
+          owner: streamweaverio
+          repo: node-protos
+          generateReleaseNotes: true
+          draft: false
+          prerelease: false
