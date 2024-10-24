@@ -54,4 +54,4 @@ package_node:
 		cd $(OUTPUT_NODE) && npm login --scope=@streamweaverio; \
 	fi
 	@echo "Node.js package preparation complete"
-	cd @$(OUTPUT_NODE) && npm publish --access public
+	@cd $(OUTPUT_NODE) && npm publish --access public
