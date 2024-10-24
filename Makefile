@@ -1,3 +1,5 @@
+NODE_VERSION ?= 0.0.1
+
 GITHUB_USERNAME = streamweaverio
 GO_REPO_NAME = go-protos
 
@@ -41,4 +43,13 @@ package_go:
 
 package_node:
 	@cd $(OUTPUT_NODE) && npm init --scope=@streamweaverio -y
+	@cd $(OUTPUT_NODE) && npm version $(NODE_VERSION)
 	@cd $(OUTPUT_NODE) && npm install grpc @grpc/grpc-js google-protobuf --save
+	@cd $(OUTPUT_NODE) && npm install --save-dev @types/google-protobuf
+	@if [ -n "$(NPM_TOKEN)" ]; then \
+		echo "//registry.npmjs.org/:_authToken=$(NPM_TOKEN)" > $(OUTPUT_NODE)/.npmrc; \
+		echo "NPM authentication configured"; \
+	else \
+		cd $(OUTPUT_NODE) && npm login --scope=@streamweaverio; \
+	fi
+	@echo "Node.js package preparation complete"

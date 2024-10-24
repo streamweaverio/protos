@@ -23,6 +23,7 @@ message CreateConsumerGroupResponse {}
 
 message AddConsumerResponse {
   string status = 1;
+  string error_message = 2;
 }
 
 message ListConsumerGroupsResponse {}

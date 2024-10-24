@@ -11,6 +11,7 @@ env:
   GO_PACKAGE: github.com/streamweaverio/go-protos
   NODEJS_PACKAGE: github.com/streamweaverio/node-protos
   SOURCE_REPO: streamweaverio/protos
+  NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
 jobs:
   bootstrap:
@@ -80,7 +81,7 @@ jobs:
             tools_cmd: npm ci
             generate_cmd: |
               make gen_node_ts
-              make package_node
+              NODE_VERSION=${{ needs.bootstrap.outputs.tag }} make package_node
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -228,3 +229,12 @@ jobs:
           generateReleaseNotes: true
           draft: false
           prerelease: false
+
+      - name: NPM Publish
+        if: matrix.config.language == 'nodejs' && steps.commit.outputs.no_changes != 'true'
+        env:
+          PATH: ${{ matrix.config.output_path }}
+        run: |
+          echo "publishing to npm"
+          cd $PATH
+          npm publish --access public
