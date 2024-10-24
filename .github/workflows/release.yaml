@@ -92,7 +92,7 @@ jobs:
         if: matrix.config.language == 'go'
         uses: actions/setup-go@v4
         with:
-          go-version: '1.21'
+          go-version: '1.23'
 
       - name: Setup Node.js
         if: matrix.config.language == 'nodejs'
