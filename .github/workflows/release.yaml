@@ -10,7 +10,6 @@ run-name: Release ${{ github.ref }}
 env:
   GO_PACKAGE: github.com/streamweaverio/go-protos
   NODEJS_PACKAGE: github.com/streamweaverio/node-protos
-  OUTPUT_PATH: ./outputs/protos
   SOURCE_REPO: streamweaverio/protos
 
 jobs:
@@ -64,6 +63,7 @@ jobs:
           - language: go
             package: github.com/streamweaverio/go-protos
             destination_repository: streamweaverio/go-protos
+            output_path: outputs/protos/github.com/streamweaverio/go-protos
             repo_name: go-protos
             tools_cmd: |
               go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.28
@@ -75,6 +75,7 @@ jobs:
           - language: nodejs
             package: github.com/streamweaverio/node-protos
             destination_repository: streamweaverio/node-protos
+            output_path: outputs/protos/github.com/protos
             repo_name: node-protos
             tools_cmd: npm ci
             generate_cmd: |
@@ -127,7 +128,7 @@ jobs:
           COMMIT_SHA: ${{ needs.bootstrap.outputs.sha }}
           VERSION: ${{ needs.bootstrap.outputs.tag }}
           DATE: ${{ needs.bootstrap.outputs.date }}
-          OUTPUT_PATH: ${{ env.OUTPUT_PATH }}
+          OUTPUT_PATH: ${{ matrix.config.output_path }}
         run: |
           cd destination
           
