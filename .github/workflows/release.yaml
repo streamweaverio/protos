@@ -62,7 +62,7 @@ jobs:
       matrix:
         config:
           - language: go
-            package: ${{ env.GO_PACKAGE }}
+            package: github.com/streamweaverio/go-protos
             repo: streamweaverio/go-protos
             tools_cmd: |
               go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.28
@@ -72,7 +72,7 @@ jobs:
               make gen_go
               make package_go
           - language: nodejs
-            package: ${{ env.NODEJS_PACKAGE }}
+            package: github.com/streamweaverio/node-protos
             repo: streamweaverio/node-protos
             tools_cmd: npm ci
             generate_cmd: |
@@ -103,9 +103,6 @@ jobs:
 
       - name: Install Protoc
         uses: arduino/setup-protoc@v3
-        with:
-          version: '25.1'
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install tools
         working-directory: source
@@ -129,6 +126,7 @@ jobs:
           COMMIT_SHA: ${{ needs.bootstrap.outputs.sha }}
           VERSION: ${{ needs.bootstrap.outputs.tag }}
           DATE: ${{ needs.bootstrap.outputs.date }}
+          OUTPUT_PATH: ${{ env.OUTPUT_PATH }}
         run: |
           cd destination
           
@@ -140,7 +138,7 @@ jobs:
           
           # Clean and copy files
           rm -rf *
-          cp -r ../source/${{ env.OUTPUT_PATH }}/* .
+          cp -r ../source/${OUTPUT_PATH}/* .
           
           # Check for changes
           if [ -z "$(git status --porcelain)" ]; then
