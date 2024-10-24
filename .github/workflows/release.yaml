@@ -30,7 +30,7 @@ jobs:
         with:
           repository: ${{ env.SOURCE_REPO }}
           token: ${{ secrets.WORKFLOW_GITHUB_PAT }}
-          fetch-depth: 0  # Fetch all history for better release notes
+          fetch-depth: 0
           
       - name: Tag
         id: tag
@@ -60,35 +60,24 @@ jobs:
     needs: bootstrap
     strategy:
       matrix:
-        language: [go, nodejs]
-        include:
+        config:
           - language: go
             package: ${{ env.GO_PACKAGE }}
-            setup: |
-              uses: actions/setup-go@v4
-              with:
-                go-version: '1.23'
-            tools: |
+            repo: streamweaverio/go-protos
+            tools_cmd: |
               go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.28
               go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.2
               echo "${HOME}/go/bin" >> $GITHUB_PATH
-            generate: |
+            generate_cmd: |
               make gen_go
               make package_go
-            repo: streamweaverio/go-protos
           - language: nodejs
             package: ${{ env.NODEJS_PACKAGE }}
-            setup: |
-              uses: actions/setup-node@v4
-              with:
-                node-version: '18'
-                cache: 'npm'
-            tools: |
-              npm ci
-            generate: |
+            repo: streamweaverio/node-protos
+            tools_cmd: npm ci
+            generate_cmd: |
               make gen_node_ts
               make package_node
-            repo: streamweaverio/node-protos
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -99,29 +88,39 @@ jobs:
         with:
           path: source
 
-      - name: Setup ${{ matrix.language }}
-        uses: ${{ matrix.setup }}
+      - name: Setup Go
+        if: matrix.config.language == 'go'
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.21'
+
+      - name: Setup Node.js
+        if: matrix.config.language == 'nodejs'
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
 
       - name: Install Protoc
         uses: arduino/setup-protoc@v3
         with:
-          version: '25.1'  # Specify version for consistency
+          version: '25.1'
           repo-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install tools
         working-directory: source
-        run: ${{ matrix.tools }}
+        run: ${{ matrix.config.tools_cmd }}
 
       - name: Checkout destination repository
         uses: actions/checkout@v4
         with:
-          repository: ${{ matrix.repo }}
+          repository: ${{ matrix.config.repo }}
           token: ${{ secrets.WORKFLOW_GITHUB_PAT }}
           path: destination
 
       - name: Generate Code
         working-directory: source
-        run: ${{ matrix.generate }}
+        run: ${{ matrix.config.generate_cmd }}
 
       - name: Commit Changes
         id: commit
@@ -139,8 +138,8 @@ jobs:
           BRANCH="protos-${DATE}-${GIT_SHORT_SHA}"
           git switch -c $BRANCH
           
-          # Copy generated files
-          rm -rf *  # Clean destination directory first
+          # Clean and copy files
+          rm -rf *
           cp -r ../source/${{ env.OUTPUT_PATH }}/* .
           
           # Check for changes
@@ -150,7 +149,7 @@ jobs:
           fi
 
           git add -A
-          git commit -m "Streamweaver proto ${VERSION}: Generated ${{ matrix.language }} code from commit: ${COMMIT_SHA}"
+          git commit -m "Streamweaver proto ${VERSION}: Generated ${{ matrix.config.language }} code from commit: ${COMMIT_SHA}"
           git push origin $BRANCH
           
           echo "branch=$BRANCH" >> $GITHUB_OUTPUT
@@ -161,7 +160,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.WORKFLOW_GITHUB_PAT }}
           BRANCH: ${{ steps.commit.outputs.branch }}
-          REPO: ${{ matrix.package }}
+          REPO: ${{ matrix.config.package }}
           VERSION: ${{ needs.bootstrap.outputs.tag }}
         run: |
           PR_BODY="# Automated Proto Generation
@@ -171,7 +170,7 @@ jobs:
           ## Details
           - Source Version: ${VERSION}
           - Source Commit: ${{ needs.bootstrap.outputs.sha }}
-          - Language: ${{ matrix.language }}
+          - Language: ${{ matrix.config.language }}
 
           ## Changes
           $(git -C destination diff --stat main)
@@ -200,7 +199,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.WORKFLOW_GITHUB_PAT }}
           PR_NUMBER: ${{ steps.pull_request.outputs.pr_number }}
-          REPO: ${{ matrix.package }}
+          REPO: ${{ matrix.config.package }}
         run: |
           echo "Waiting for checks to complete..."
           gh pr merge $PR_NUMBER \
@@ -218,10 +217,10 @@ jobs:
           tag: ${{ needs.bootstrap.outputs.tag }}
           name: Release ${{ needs.bootstrap.outputs.tag }}
           owner: streamweaverio
-          repo: ${{ matrix.repo }}
+          repo: ${{ matrix.config.repo }}
           body: |
             ## What's Changed
-            Auto-generated ${{ matrix.language }} code from proto definitions.
+            Auto-generated ${{ matrix.config.language }} code from proto definitions.
 
             ### Details
             - Source Version: ${{ needs.bootstrap.outputs.tag }}
