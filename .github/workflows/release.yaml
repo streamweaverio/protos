@@ -75,7 +75,7 @@ jobs:
           - language: nodejs
             package: github.com/streamweaverio/node-protos
             destination_repository: streamweaverio/node-protos
-            output_path: outputs/protos/github.com/protos
+            output_path: outputs/protos
             repo_name: node-protos
             tools_cmd: npm ci
             generate_cmd: |
