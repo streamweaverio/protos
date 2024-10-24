@@ -47,11 +47,11 @@ package_node:
 	@cd $(OUTPUT_NODE) && npm install grpc @grpc/grpc-js google-protobuf --save
 	@cd $(OUTPUT_NODE) && npm install --save-dev @types/google-protobuf
 	@if [ -n "$(NPM_TOKEN)" ]; then \
-		@cd $(OUTPUT_NODE) && \
-		echo "//registry.npmjs.org/:_authToken=$(NPM_TOKEN)" > $(OUTPUT_NODE)/.npmrc; \
-		echo "NPM authentication configured"; \
+		cd $(OUTPUT_NODE) && \
+		echo "//registry.npmjs.org/:_authToken=$(NPM_TOKEN)" > .npmrc && \
+		npm publish --access public; \
 	else \
-		cd $(OUTPUT_NODE) && npm login --scope=@streamweaverio; \
+		echo "NPM_TOKEN not found. Please set the NPM_TOKEN environment variable or log in manually."; \
+		echo "You can log in using: npm login --scope=@streamweaverio"; \
+		exit 1; \
 	fi
-	@echo "Node.js package preparation complete"
-	@cd $(OUTPUT_NODE) && npm publish --access public
