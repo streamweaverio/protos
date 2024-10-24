@@ -116,6 +116,14 @@ jobs:
           echo "Merging PR..."
           gh pr merge $PR_NUMBER -s --admin --body "Auto-merging PR" --repo $REPO
 
+      - name: Create Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.WORKFLOW_GITHUB_PAT }}
+          REPO: ${{ env.GO_PACKAGE }}
+        run: |
+          echo "Creating release..."
+          gh release create -t ${{ github.ref_name }} -n ${{ github.ref_name }} -r $REPO
+
   nodejs:
     runs-on: ubuntu-latest
     permissions:
@@ -213,3 +221,11 @@ jobs:
           sleep 30  # Adjust the sleep duration if necessary
           echo "Merging PR..."
           gh pr merge $PR_NUMBER -s --admin --body "Auto-merging PR" --repo $REPO
+
+      - name: Create Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.WORKFLOW_GITHUB_PAT }}
+          REPO: ${{ env.NODEJS_PACKAGE }}
+        run: |
+          echo "Creating release..."
+          gh release create -t ${{ github.ref_name }} -n ${{ github.ref_name }} -r $REPO
