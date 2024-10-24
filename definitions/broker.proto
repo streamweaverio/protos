@@ -7,7 +7,6 @@ option go_package = "github.com/streamweaverio/go-protos/broker";
 import "stream.proto";
 import "consumer-group.proto";
 
-
 service StreamWeaverBroker {
   // Create a new stream
   rpc CreateStream(CreateStreamRequest) returns (CreateStreamResponse);
