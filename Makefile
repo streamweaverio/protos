@@ -39,6 +39,6 @@ package_go:
 	@cd $(OUTPUT_GO)/$(PACKAGE_GO) && \
 	if [ -f go.mod ]; then go mod tidy; else go mod init $(PACKAGE_GO) && go mod tidy; fi
 
-package_node: gen_node_ts
+package_node:
 	@cd $(OUTPUT_NODE) && npm init --scope=@streamweaverio -y
 	@cd $(OUTPUT_NODE) && npm install grpc @grpc/grpc-js google-protobuf --save
