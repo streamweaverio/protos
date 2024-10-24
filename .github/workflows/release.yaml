@@ -137,6 +137,7 @@ jobs:
 
       - name: Install tools
         run: |
+          cd source
           npm install
 
       - name: Checkout destination repository
