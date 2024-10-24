@@ -27,7 +27,7 @@ message CreateStreamRequest {
 }
 
 message CreateStreamResponse {
-  status status = 1;
+  string status = 1;
 }
 
 message GetStreamRequest {
