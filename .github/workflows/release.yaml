@@ -229,12 +229,3 @@ jobs:
           generateReleaseNotes: true
           draft: false
           prerelease: false
-
-      - name: NPM Publish
-        if: matrix.config.language == 'nodejs' && steps.commit.outputs.no_changes != 'true'
-        env:
-          PATH: "source/${{ matrix.config.output_path }}"
-        run: |
-          echo "publishing to npm"
-          cd $PATH
-          npm publish --access public
