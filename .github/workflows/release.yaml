@@ -63,7 +63,8 @@ jobs:
         config:
           - language: go
             package: github.com/streamweaverio/go-protos
-            repo: streamweaverio/go-protos
+            destination_repository: streamweaverio/go-protos
+            repo_name: go-protos
             tools_cmd: |
               go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.28
               go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.2
@@ -73,7 +74,8 @@ jobs:
               make package_go
           - language: nodejs
             package: github.com/streamweaverio/node-protos
-            repo: streamweaverio/node-protos
+            destination_repository: streamweaverio/node-protos
+            repo_name: node-protos
             tools_cmd: npm ci
             generate_cmd: |
               make gen_node_ts
@@ -110,7 +112,7 @@ jobs:
       - name: Checkout destination repository
         uses: actions/checkout@v4
         with:
-          repository: ${{ matrix.config.repo }}
+          repository: ${{ matrix.config.destination_repository }}
           token: ${{ secrets.WORKFLOW_GITHUB_PAT }}
           path: destination
 
@@ -213,7 +215,7 @@ jobs:
           tag: ${{ needs.bootstrap.outputs.tag }}
           name: Release ${{ needs.bootstrap.outputs.tag }}
           owner: streamweaverio
-          repo: ${{ matrix.config.repo }}
+          repo: ${{ matrix.config.repo_name }}
           body: |
             ## What's Changed
             Auto-generated ${{ matrix.config.language }} code from proto definitions.
