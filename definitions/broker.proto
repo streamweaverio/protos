@@ -9,9 +9,14 @@ import "consumer-group.proto";
 
 
 service StreamWeaverBroker {
+  // Create a new stream
   rpc CreateStream(CreateStreamRequest) returns (CreateStreamResponse);
+  // Get a stream by name
   rpc GetStream(GetStreamRequest) returns (GetStreamResponse);
+  // Create a new consumer group
   rpc CreateConsumerGroup(CreateConsumerGroupRequest) returns (CreateConsumerGroupResponse);
+  // Add a consumer to a consumer group
   rpc AddConsumer(AddConsumerRequest) returns (AddConsumerResponse);
+  // List consumer groups for a stream
   rpc ListConsumerGroups(ListConsumerGroupsRequest) returns (ListConsumerGroupsResponse);
 }

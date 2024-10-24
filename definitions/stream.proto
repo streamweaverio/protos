@@ -26,7 +26,8 @@ message CreateStreamRequest {
 }
 
 message CreateStreamResponse {
-  string status = 1;
+  string status = 1; // OK or ERROR
+  string error_message = 2; // If status is not OK
 }
 
 message GetStreamRequest {

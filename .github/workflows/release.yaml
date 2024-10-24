@@ -233,7 +233,7 @@ jobs:
       - name: NPM Publish
         if: matrix.config.language == 'nodejs' && steps.commit.outputs.no_changes != 'true'
         env:
-          PATH: ${{ matrix.config.output_path }}
+          PATH: "source/${{ matrix.config.output_path }}"
         run: |
           echo "publishing to npm"
           cd $PATH
