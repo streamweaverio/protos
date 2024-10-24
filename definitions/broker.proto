@@ -11,5 +11,6 @@ service StreamWeaverBroker {
   rpc CreateStream(CreateStreamRequest) returns (CreateStreamResponse);
   rpc GetStream(GetStreamRequest) returns (GetStreamResponse);
   rpc CreateConsumerGroup(CreateConsumerGroupRequest) returns (CreateConsumerGroupResponse);
+  rpc AddConsumer(AddConsumerRequest) returns (AddConsumerResponse);
   rpc ListConsumerGroups(ListConsumerGroupsRequest) returns (ListConsumerGroupsResponse);
 }
