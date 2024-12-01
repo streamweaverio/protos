@@ -9,6 +9,14 @@ message Stream {
 }
 
 /**
+* StreamMessage represents a message in a stream
+*/
+message StreamMessage {
+  // The content of the message, space separated key value pairs; e.g "key1=value1 key2=value2"
+  bytes message_content = 1;
+}
+
+/**
 * CreateStreamRequest represents a request to create a new stream
 */
 message CreateStreamRequest {
@@ -30,4 +38,18 @@ message GetStreamRequest {
 
 message GetStreamResponse {
   string name = 1;
+}
+
+/**
+* CreateConsumerGroupRequest represents a request to publish a message or messages to a stream
+*/
+message PublishRequest {
+  string stream_name = 1;
+  repeated StreamMessage messages = 2;
+}
+
+message PublishResponse {
+  string status = 1;
+  string error_message = 2;
+  repeated string message_ids = 3;
 }

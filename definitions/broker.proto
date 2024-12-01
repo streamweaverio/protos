@@ -18,4 +18,6 @@ service StreamWeaverBroker {
   rpc AddConsumer(AddConsumerRequest) returns (AddConsumerResponse);
   // List consumer groups for a stream
   rpc ListConsumerGroups(ListConsumerGroupsRequest) returns (ListConsumerGroupsResponse);
+  // Publish messages to a stream
+  rpc Publish(PublishRequest) returns (PublishResponse);
 }
